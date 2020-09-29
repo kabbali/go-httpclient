@@ -4,26 +4,28 @@ import (
 	"fmt"
 	"github.com/kabbali/go-httpclient.git/gohttp"
 	"io/ioutil"
-	"net/http"
 )
 
 var (
 	httpClient = getGithubClient()
 )
 
-func getGithubClient() gohttp.HttpClient {
-	client := gohttp.New()
+func getGithubClient() gohttp.Client {
+	client := gohttp.NewBuilder().
+		DisableTimeouts(true).
+		SetMaxIdleConnections(5).
+		Build()
 
 	//client.SetMaxIdleConnections(5)
 	//client.SetConnectionTimeout(2 * time.Second)
-	//client.SetResponseTimeout(50 * time.Millisecond)
+	//client.SetResponseTimeout(5 * time.Millisecond)
 
-	client.DisableTimeouts(true)
+	//client.DisableTimeouts(true)
 
-	commonHeaders := make(http.Header)
-	commonHeaders.Set("Authorization", "Bearer ABC-123")
+	//commonHeaders := make(http.Header)
+	//commonHeaders.Set("Authorization", "Bearer ABC-123")
 
-	client.SetHeaders(commonHeaders)
+	//client.SetHeaders(commonHeaders)
 
 	return client
 }
@@ -34,6 +36,9 @@ type User struct {
 }
 
 func main() {
+	getUrls()
+	getUrls()
+	getUrls()
 	getUrls()
 }
 

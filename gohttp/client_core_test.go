@@ -11,7 +11,7 @@ func TestGetRequestHeaders(t *testing.T) {
 	commonHeaders := make(http.Header)
 	commonHeaders.Set("Content-Type", "application/json")
 	commonHeaders.Set("User-Agent", "cool-http-client")
-	client.Headers = commonHeaders
+	client.headers = commonHeaders
 
 	// Execution
 	requestHeaders := make(http.Header)
@@ -58,13 +58,13 @@ func TestGetRequestBody(t *testing.T) {
 		// Execution
 		requestBody := []string{"one", "two"}
 		body, err := client.getRequestBody("application/json", requestBody)
-		
+
 		// Validation
 		if err != nil {
 			t.Error("no error expected when marshaling string slice as json")
 		}
 
-		if string(body) != 	`["one","two"]` {
+		if string(body) != `["one","two"]` {
 			t.Error("invalid json body obtained")
 		}
 	})

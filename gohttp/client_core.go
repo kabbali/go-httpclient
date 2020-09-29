@@ -95,7 +95,7 @@ func (c *httpClient) getRequestHeaders(requestHeaders http.Header) http.Header {
 	}
 
 	// Add common Headers from HTTP client instance (defined in httpClient struct)
-	for header, value := range c.Headers {
+	for header, value := range c.headers {
 		if len(value) > 0 {
 			headers.Set(header, value[0])
 		}
