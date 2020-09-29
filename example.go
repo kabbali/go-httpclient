@@ -18,6 +18,8 @@ func getGithubClient() gohttp.HttpClient {
 	//client.SetConnectionTimeout(2 * time.Second)
 	//client.SetResponseTimeout(50 * time.Millisecond)
 
+	client.DisableTimeouts(true)
+
 	commonHeaders := make(http.Header)
 	commonHeaders.Set("Authorization", "Bearer ABC-123")
 
@@ -28,7 +30,7 @@ func getGithubClient() gohttp.HttpClient {
 
 type User struct {
 	FirstName string `json:"first_name"`
-	LastName string `json:"last_name"`
+	LastName  string `json:"last_name"`
 }
 
 func main() {

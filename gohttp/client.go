@@ -5,8 +5,8 @@ import (
 	"time"
 )
 
-type httpClient struct{
-	client *http.Client
+type httpClient struct {
+	client  *http.Client
 	Headers http.Header
 
 	// controls the maximum idle (keep-alive) connections to keep.
@@ -20,6 +20,8 @@ type httpClient struct{
 	// a connection.
 	connectionTimeout time.Duration
 
+	// allow disable client timeouts
+	disableTimeouts bool
 }
 
 func New() HttpClient {
@@ -31,6 +33,8 @@ type HttpClient interface {
 	SetResponseTimeout(timeout time.Duration)
 	SetConnectionTimeout(timeout time.Duration)
 	SetHeaders(headers http.Header)
+	DisableTimeouts(disable bool)
+
 	Get(url string, headers http.Header) (*http.Response, error)
 	Post(url string, headers http.Header, body interface{}) (*http.Response, error)
 	Put(url string, headers http.Header, body interface{}) (*http.Response, error)
@@ -48,6 +52,10 @@ func (c *httpClient) SetResponseTimeout(timeout time.Duration) {
 
 func (c *httpClient) SetConnectionTimeout(timeout time.Duration) {
 	c.connectionTimeout = timeout
+}
+
+func (c *httpClient) DisableTimeouts(disable bool) {
+	c.disableTimeouts = disable
 }
 
 func (c *httpClient) SetHeaders(headers http.Header) {

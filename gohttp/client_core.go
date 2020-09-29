@@ -13,12 +13,11 @@ import (
 
 const (
 	defaultMaxIdleConnections = 5
-	defaultResponseTimeout = 5 * time.Second
-	defaultConnectionTimeout = 100 * time.Millisecond
+	defaultResponseTimeout    = 5 * time.Second
+	defaultConnectionTimeout  = 100 * time.Millisecond
 )
 
-
-func (c *httpClient) do(method string, url string, headers http.Header, body interface{}) (*http.Response, error){
+func (c *httpClient) do(method string, url string, headers http.Header, body interface{}) (*http.Response, error) {
 	//var client = http.Client{}
 
 	fullHeaders := c.getRequestHeaders(headers)
@@ -46,8 +45,9 @@ func (c *httpClient) getHttpClient() *http.Client {
 	}
 
 	c.client = &http.Client{
+		Timeout: c.getConnectionTimeout() + c.getResponseTimeout(),
 		Transport: &http.Transport{
-			MaxIdleConnsPerHost: c.getMaxIdleConnections(),
+			MaxIdleConnsPerHost:   c.getMaxIdleConnections(),
 			ResponseHeaderTimeout: c.getResponseTimeout(),
 			DialContext: (&net.Dialer{
 				Timeout: c.getConnectionTimeout(),
@@ -57,23 +57,29 @@ func (c *httpClient) getHttpClient() *http.Client {
 	return c.client
 }
 
-func (c *httpClient) getMaxIdleConnections() int  {
+func (c *httpClient) getMaxIdleConnections() int {
 	if c.maxIdleConnections > 0 {
 		return c.maxIdleConnections
 	}
 	return defaultMaxIdleConnections
 }
 
-func (c *httpClient) getResponseTimeout() time.Duration  {
+func (c *httpClient) getResponseTimeout() time.Duration {
 	if c.responseTimeout > 0 {
 		return c.responseTimeout
+	}
+	if c.disableTimeouts {
+		return 0
 	}
 	return defaultResponseTimeout
 }
 
-func (c *httpClient) getConnectionTimeout() time.Duration  {
+func (c *httpClient) getConnectionTimeout() time.Duration {
 	if c.connectionTimeout > 0 {
 		return c.connectionTimeout
+	}
+	if c.disableTimeouts {
+		return 0
 	}
 	return defaultConnectionTimeout
 }
