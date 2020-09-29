@@ -58,27 +58,27 @@ func (c *httpClient) getHttpClient() *http.Client {
 }
 
 func (c *httpClient) getMaxIdleConnections() int {
-	if c.maxIdleConnections > 0 {
-		return c.maxIdleConnections
+	if c.builder.maxIdleConnections > 0 {
+		return c.builder.maxIdleConnections
 	}
 	return defaultMaxIdleConnections
 }
 
 func (c *httpClient) getResponseTimeout() time.Duration {
-	if c.responseTimeout > 0 {
-		return c.responseTimeout
+	if c.builder.responseTimeout > 0 {
+		return c.builder.responseTimeout
 	}
-	if c.disableTimeouts {
+	if c.builder.disableTimeouts {
 		return 0
 	}
 	return defaultResponseTimeout
 }
 
 func (c *httpClient) getConnectionTimeout() time.Duration {
-	if c.connectionTimeout > 0 {
-		return c.connectionTimeout
+	if c.builder.connectionTimeout > 0 {
+		return c.builder.connectionTimeout
 	}
-	if c.disableTimeouts {
+	if c.builder.disableTimeouts {
 		return 0
 	}
 	return defaultConnectionTimeout
@@ -95,7 +95,7 @@ func (c *httpClient) getRequestHeaders(requestHeaders http.Header) http.Header {
 	}
 
 	// Add common Headers from HTTP client instance (defined in httpClient struct)
-	for header, value := range c.headers {
+	for header, value := range c.builder.headers {
 		if len(value) > 0 {
 			headers.Set(header, value[0])
 		}
