@@ -38,8 +38,6 @@ type User struct {
 func main() {
 	getUrls()
 	getUrls()
-	getUrls()
-	getUrls()
 }
 
 func getUrls() {

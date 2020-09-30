@@ -5,32 +5,33 @@ import (
 	"time"
 )
 
-type clientBuilder struct {
-	headers http.Header
+type (
+	clientBuilder struct {
+		headers http.Header
 
-	// controls the maximum idle (keep-alive) connections to keep.
-	maxIdleConnections int
+		// controls the maximum idle (keep-alive) connections to keep.
+		maxIdleConnections int
 
-	// amount of time to wait for a server's response headers after fully
-	// writing the request.
-	responseTimeout time.Duration
+		// amount of time to wait for a server's response headers after fully
+		// writing the request.
+		responseTimeout time.Duration
 
-	// connectionTimeout is the maximum amount of time a dial will wait for
-	// a connection.
-	connectionTimeout time.Duration
+		// connectionTimeout is the maximum amount of time a dial will wait for
+		// a connection.
+		connectionTimeout time.Duration
 
-	// allow disable client timeouts
-	disableTimeouts bool
-}
-
-type ClientBuilder interface {
-	SetMaxIdleConnections(i int) ClientBuilder
-	SetResponseTimeout(timeout time.Duration) ClientBuilder
-	SetConnectionTimeout(timeout time.Duration) ClientBuilder
-	SetHeaders(headers http.Header) ClientBuilder
-	DisableTimeouts(disable bool) ClientBuilder
-	Build() Client
-}
+		// allow disable client timeouts
+		disableTimeouts bool
+	}
+	ClientBuilder interface {
+		SetMaxIdleConnections(i int) ClientBuilder
+		SetResponseTimeout(timeout time.Duration) ClientBuilder
+		SetConnectionTimeout(timeout time.Duration) ClientBuilder
+		SetHeaders(headers http.Header) ClientBuilder
+		DisableTimeouts(disable bool) ClientBuilder
+		Build() Client
+	}
+)
 
 func NewBuilder() ClientBuilder {
 	return &clientBuilder{}
