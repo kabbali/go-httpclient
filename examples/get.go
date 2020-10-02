@@ -2,16 +2,16 @@ package examples
 
 import (
 	"fmt"
-	)
+)
 
 type Endpoints struct {
-	CurrentUserUrl string `json:"current_user_url"`
+	CurrentUserUrl    string `json:"current_user_url"`
 	AuthorizationsUrl string `json:"authorizations_url"`
-	RepositoryUrl string `json:"repository_url"`
+	RepositoryUrl     string `json:"repository_url"`
 }
 
 func GetEndpoints() (*Endpoints, error) {
-	response, err:= httpClient.Get("https://api.github.com", nil)
+	response, err := httpClient.Get("https://api.github.com", nil)
 	if err != nil {
 		// Deal with error
 		return nil, err

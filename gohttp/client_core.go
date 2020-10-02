@@ -27,6 +27,10 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 		return nil, err
 	}
 
+	if mock := mockupServer.getMock(method, url, string(requestBody)); mock != nil {
+		return mock.GetResponse()
+	}
+
 	request, err := http.NewRequest(method, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, errors.New("unable to create new request")
@@ -35,7 +39,6 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 	request.Header = fullHeaders
 
 	client := c.getHttpClient()
-
 
 	response, err := client.Do(request)
 	if err != nil {
@@ -49,7 +52,7 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 	}
 
 	finalResponse := Response{
-		status:		response.Status,
+		status:     response.Status,
 		statusCode: response.StatusCode,
 		headers:    response.Header,
 		body:       responseBody,

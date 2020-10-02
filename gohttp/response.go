@@ -7,7 +7,7 @@ import (
 
 type (
 	Response struct {
-		status	string
+		status     string
 		statusCode int
 		headers    http.Header
 		body       []byte

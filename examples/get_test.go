@@ -5,18 +5,28 @@ import (
 	"fmt"
 	"github.com/kabbali/go-httpclient.git/gohttp"
 	"net/http"
+	"os"
+	"strings"
 	"testing"
 )
 
+func TestMain(m *testing.M) {
+	fmt.Println("About to start running tests for package \"examples\"")
+
+	// Tell the HTTP library to mock any further request from here
+	gohttp.StartMockServer()
+
+	os.Exit(m.Run())
+}
+
 func TestGetEndpoints(t *testing.T) {
-	gohttp.StartServer()
 
 	t.Run("TestErrorFetchingFromGithub", func(t *testing.T) {
 		// Initialization
 		gohttp.AddMock(gohttp.Mock{
 			Method: http.MethodGet,
-			Url: "https://api.github.com",
-			Error: errors.New("timeout getting github endpoints"),
+			Url:    "https://api.github.com",
+			Error:  errors.New("timeout getting github endpoints"),
 		})
 
 		// Execution
@@ -39,10 +49,10 @@ func TestGetEndpoints(t *testing.T) {
 	t.Run("TestErrorUnmarshalResponseBody", func(t *testing.T) {
 		// Initialization
 		gohttp.AddMock(gohttp.Mock{
-			Method: http.MethodGet,
-			Url: "https://api.github.com",
+			Method:             http.MethodGet,
+			Url:                "https://api.github.com",
 			ResponseStatusCode: http.StatusOK,
-			RequestBody: `{"current_user_url": 123}`,
+			ResponseBody:       `{"current_user_url": 123}`,
 		})
 
 		// Execution
@@ -57,7 +67,8 @@ func TestGetEndpoints(t *testing.T) {
 			t.Error("an error was expected")
 		}
 
-		if err.Error() != "json unmarshalled error" {
+		if !strings.Contains(err.Error(), "cannot unmarshal number into Go struct field Endpoints") {
+			//fmt.Println(err.Error())
 			t.Error("invalid error message received")
 		}
 	})
@@ -65,10 +76,10 @@ func TestGetEndpoints(t *testing.T) {
 	t.Run("TestNoError", func(t *testing.T) {
 		// Initialization
 		gohttp.AddMock(gohttp.Mock{
-			Method: http.MethodGet,
-			Url: "https://api.github.com",
+			Method:             http.MethodGet,
+			Url:                "https://api.github.com",
 			ResponseStatusCode: http.StatusOK,
-			RequestBody: `{"current_user_url": "https://api.github.com/user"}`,
+			ResponseBody:       `{"current_user_url": "https://api.github.com/user"}`,
 		})
 
 		// Execution
@@ -87,13 +98,4 @@ func TestGetEndpoints(t *testing.T) {
 			t.Error("invalid current user url")
 		}
 	})
-
-
-	// Initialization
-	// Execution
-	endpoints, err := GetEndpoints()
-
-	// Validation
-	fmt.Println(err)
-	fmt.Println(endpoints)
 }
