@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/kabbali/go-httpclient.git/gohttp"
-	"io/ioutil"
 )
 
 var (
@@ -37,7 +36,6 @@ type User struct {
 
 func main() {
 	getUrls()
-	getUrls()
 }
 
 func getUrls() {
@@ -46,20 +44,32 @@ func getUrls() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(response.StatusCode)
+	fmt.Println(response.Status())
+	fmt.Println(response.StatusCode())
+	fmt.Println(response.StringBody())
 
-	bytes, err := ioutil.ReadAll(response.Body)
-	fmt.Println(string(bytes))
+	// Using our custom response
+	//var user User
+	//if err:= response.UnmarshalJson(&user); err != nil {
+	//	panic(err)
+	//}
+	//fmt.Println(user.FirstName)
+	//
+	//// Using default http.Response
+	//fmt.Println(response.StatusCode())
+	//
+	//bytes, err := ioutil.ReadAll(response.Body)
+	//fmt.Println(string(bytes))
 }
 
-func createUser(user User) {
-
-	response, err := httpClient.Post("https://api.github.com", nil, user)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(response.StatusCode)
-
-	bytes, err := ioutil.ReadAll(response.Body)
-	fmt.Println(string(bytes))
-}
+//func createUser(user User) {
+//
+//	response, err := httpClient.Post("https://api.github.com", nil, user)
+//	if err != nil {
+//		panic(err)
+//	}
+//	fmt.Println(response.StatusCode())
+//
+//	bytes, err := ioutil.ReadAll(response.Body())
+//	fmt.Println(string(bytes))
+//}
