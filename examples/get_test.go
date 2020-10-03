@@ -90,7 +90,7 @@ func TestGetEndpoints(t *testing.T) {
 
 		// Validation
 		if err != nil {
-			t.Error(fmt.Sprintf("no error was expected and we got '%s'", err.Error()))
+			t.Error(fmt.Sprintf("no error was expected and we got `%s`", err.Error()))
 		}
 
 		if endpoints == nil {
