@@ -3,7 +3,7 @@ package examples
 import (
 	"errors"
 	"fmt"
-	"github.com/kabbali/go-httpclient.git/gohttp"
+	"github.com/kabbali/go-httpclient/gohttp"
 	"net/http"
 	"os"
 	"strings"
