@@ -6,6 +6,16 @@ import (
 )
 
 type (
+	ClientBuilder interface {
+		SetMaxIdleConnections(i int) ClientBuilder
+		SetResponseTimeout(timeout time.Duration) ClientBuilder
+		SetConnectionTimeout(timeout time.Duration) ClientBuilder
+		SetHeaders(headers http.Header) ClientBuilder
+		DisableTimeouts(disable bool) ClientBuilder
+		SetHttpClient(client *http.Client) ClientBuilder
+
+		Build() Client
+	}
 	clientBuilder struct {
 		headers http.Header
 
@@ -20,16 +30,10 @@ type (
 		// a connection.
 		connectionTimeout time.Duration
 
-		// allow disable client timeouts
+		// allow to disable client timeouts
 		disableTimeouts bool
-	}
-	ClientBuilder interface {
-		SetMaxIdleConnections(i int) ClientBuilder
-		SetResponseTimeout(timeout time.Duration) ClientBuilder
-		SetConnectionTimeout(timeout time.Duration) ClientBuilder
-		SetHeaders(headers http.Header) ClientBuilder
-		DisableTimeouts(disable bool) ClientBuilder
-		Build() Client
+
+		client *http.Client
 	}
 )
 
@@ -66,5 +70,10 @@ func (c *clientBuilder) DisableTimeouts(disable bool) ClientBuilder {
 
 func (c *clientBuilder) SetHeaders(headers http.Header) ClientBuilder {
 	c.headers = headers
+	return c
+}
+
+func (c *clientBuilder) SetHttpClient(client *http.Client) ClientBuilder{
+	c.client = client
 	return c
 }

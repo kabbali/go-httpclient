@@ -62,6 +62,10 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 
 func (c *httpClient) getHttpClient() *http.Client {
 	c.clientOnce.Do(func() {
+		if c.builder.client != nil {
+			c.client = c.builder.client
+			return
+		}
 		c.client = &http.Client{
 			Timeout: c.getConnectionTimeout() + c.getResponseTimeout(),
 			Transport: &http.Transport{
@@ -101,26 +105,6 @@ func (c *httpClient) getConnectionTimeout() time.Duration {
 		return 0
 	}
 	return defaultConnectionTimeout
-}
-
-func (c *httpClient) getRequestHeaders(requestHeaders http.Header) http.Header {
-	headers := make(http.Header)
-
-	// Add custom Headers from current request (defined in do method)
-	for header, value := range requestHeaders {
-		if len(value) > 0 {
-			headers.Set(header, value[0])
-		}
-	}
-
-	// Add common Headers from HTTP client instance (defined in httpClient struct)
-	for header, value := range c.builder.headers {
-		if len(value) > 0 {
-			headers.Set(header, value[0])
-		}
-	}
-
-	return headers
 }
 
 func (c *httpClient) getRequestBody(contentType string, body interface{}) ([]byte, error) {
