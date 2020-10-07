@@ -73,7 +73,7 @@ func (c *clientBuilder) SetHeaders(headers http.Header) ClientBuilder {
 	return c
 }
 
-func (c *clientBuilder) SetHttpClient(client *http.Client) ClientBuilder{
+func (c *clientBuilder) SetHttpClient(client *http.Client) ClientBuilder {
 	c.client = client
 	return c
 }
