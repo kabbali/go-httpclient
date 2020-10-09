@@ -22,6 +22,8 @@ type Repository struct {
 //  https://api.github.com/user/repos \
 //  body '{"name":"name"}'
 func CreateRepo(request Repository) (*Repository, error) {
+	//bytes, _ := json.Marshal(request)
+	//println(string(bytes))
 	response, err := httpClient.Post("https://api.github.com/user/repos", request)
 	if err != nil {
 		return nil, err
