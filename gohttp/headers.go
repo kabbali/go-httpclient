@@ -1,6 +1,7 @@
 package gohttp
 
 import (
+	"github.com/kabbali/go-httpclient/gomime"
 	"net/http"
 )
 
@@ -28,5 +29,12 @@ func (c *httpClient) getRequestHeaders(requestHeaders http.Header) http.Header {
 		}
 	}
 
+	// Set User-Agent if none is defined
+	if c.builder.userAgent != "" {
+		if headers.Get(gomime.HeaderUserAgent) != "" {
+			return headers
+		}
+		headers.Set(gomime.HeaderUserAgent, c.builder.userAgent)
+	}
 	return headers
 }

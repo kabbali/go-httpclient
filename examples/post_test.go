@@ -38,22 +38,16 @@ func TestCreateRepo(t *testing.T) {
 			t.Error("error message should be: timeout error from github")
 		}
 	})
-	
+
 	t.Run("NoErrorProcessingGithubErrorResponse", func(t *testing.T) {
 		gohttp.FlushMocks()
 		gohttp.AddMock(gohttp.Mock{
-			Method:      http.MethodPost,
-			Url:         "https://api.github.com/user/repos",
-			RequestBody: `{"name":"test-repo","description":"repository for testing","private":true}`,
+			Method:             http.MethodPost,
+			Url:                "https://api.github.com/user/repos",
+			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
 			ResponseStatusCode: http.StatusUnauthorized,
-			ResponseBody: `{"message":"Requires authentication"}`,
+			ResponseBody:       `{"message":"Requires authentication"}`,
 		})
-		
-		githubError := GithubError{
-			StatusCode:       http.StatusUnauthorized,
-			Message:          "Requires authentication",
-			DocumentationUrl: "https://docs.github.com/rest/reference/repos#create-a-repository-for-the-authenticated-user",
-		}
 
 		repository := Repository{
 			Name:        "test-repo",
@@ -71,7 +65,7 @@ func TestCreateRepo(t *testing.T) {
 			t.Error("error expected when we get a timeout from github")
 		}
 
-		if err.Error() != githubError.Message{
+		if err.Error() != "Requires authentication" {
 			t.Error("error message should be: Requires authentication")
 		}
 	})
@@ -79,11 +73,11 @@ func TestCreateRepo(t *testing.T) {
 	t.Run("ErrorProcessingGithubErrorResponse", func(t *testing.T) {
 		gohttp.FlushMocks()
 		gohttp.AddMock(gohttp.Mock{
-			Method:      http.MethodPost,
-			Url:         "https://api.github.com/user/repos",
-			RequestBody: `{"name":"test-repo","description":"repository for testing","private":true}`,
+			Method:             http.MethodPost,
+			Url:                "https://api.github.com/user/repos",
+			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
 			ResponseStatusCode: http.StatusUnauthorized,
-			ResponseBody: `{"message":123}`,
+			ResponseBody:       `{"message":123}`,
 		})
 
 		repository := Repository{
@@ -105,17 +99,16 @@ func TestCreateRepo(t *testing.T) {
 		if !strings.Contains(err.Error(), "error processing github error response when creating a new repo") {
 			t.Error("invalid error message received")
 		}
-		println(err.Error())
 	})
 
 	t.Run("NoErrorFromGithub", func(t *testing.T) {
 		gohttp.FlushMocks()
 		gohttp.AddMock(gohttp.Mock{
-			Method:      http.MethodPost,
-			Url:         "https://api.github.com/user/repos",
-			RequestBody: `{"name":"test-repo","description":"repository for testing","private":true}`,
+			Method:             http.MethodPost,
+			Url:                "https://api.github.com/user/repos",
+			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
 			ResponseStatusCode: http.StatusCreated,
-			ResponseBody: `{"id":129,"name":"test-repo"}`,
+			ResponseBody:       `{"id":129,"name":"test-repo"}`,
 		})
 
 		repository := Repository{
@@ -142,11 +135,11 @@ func TestCreateRepo(t *testing.T) {
 	t.Run("ErrorUnmarshalResponseBody", func(t *testing.T) {
 		gohttp.FlushMocks()
 		gohttp.AddMock(gohttp.Mock{
-			Method:      http.MethodPost,
-			Url:         "https://api.github.com/user/repos",
-			RequestBody: `{"name":"test-repo","description":"repository for testing","private":true}`,
+			Method:             http.MethodPost,
+			Url:                "https://api.github.com/user/repos",
+			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
 			ResponseStatusCode: http.StatusCreated,
-			ResponseBody: `{"id":129,"name":123}`,
+			ResponseBody:       `{"id":129,"name":123}`,
 		})
 
 		repository := Repository{
@@ -157,7 +150,6 @@ func TestCreateRepo(t *testing.T) {
 
 		// Execution
 		repo, err := CreateRepo(repository)
-
 
 		// Validation
 		if repo != nil {

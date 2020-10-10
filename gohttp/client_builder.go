@@ -13,6 +13,7 @@ type (
 		SetHeaders(headers http.Header) ClientBuilder
 		DisableTimeouts(disable bool) ClientBuilder
 		SetHttpClient(client *http.Client) ClientBuilder
+		SetUserAgent(userAgent string) ClientBuilder
 
 		Build() Client
 	}
@@ -33,7 +34,8 @@ type (
 		// allow to disable client timeouts
 		disableTimeouts bool
 
-		client *http.Client
+		client    *http.Client
+		userAgent string
 	}
 )
 
@@ -75,5 +77,10 @@ func (c *clientBuilder) SetHeaders(headers http.Header) ClientBuilder {
 
 func (c *clientBuilder) SetHttpClient(client *http.Client) ClientBuilder {
 	c.client = client
+	return c
+}
+
+func (c *clientBuilder) SetUserAgent(userAgent string) ClientBuilder {
+	c.userAgent = userAgent
 	return c
 }

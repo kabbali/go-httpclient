@@ -97,8 +97,11 @@ func TestGetEndpoints(t *testing.T) {
 			t.Error("expected endpoints and received nil ")
 		}
 
-		if endpoints.CurrentUserUrl != "https://api.github.com/user" {
-			t.Error("invalid current user url")
+		if endpoints != nil {
+			if endpoints.CurrentUserUrl != "https://api.github.com/user" {
+				t.Error("invalid current user url")
+			}
 		}
+
 	})
 }
