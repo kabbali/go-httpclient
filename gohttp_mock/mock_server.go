@@ -1,4 +1,4 @@
-package gohttp
+package gohttp_mock
 
 import (
 	"crypto/md5"
@@ -9,42 +9,42 @@ import (
 	"sync"
 )
 
-var mockupServer = mockServer{
+var MockupServer = mockServer{
 	mocks: make(map[string]*Mock),
 }
 
 type mockServer struct {
-	enable      bool
+	enabled     bool
 	serverMutex sync.Mutex
 	mocks       map[string]*Mock
 }
 
 func StartMockServer() {
-	mockupServer.serverMutex.Lock()
-	defer mockupServer.serverMutex.Unlock()
+	MockupServer.serverMutex.Lock()
+	defer MockupServer.serverMutex.Unlock()
 
-	mockupServer.enable = true
+	MockupServer.enabled = true
 }
 
 func StopMockServer() {
-	mockupServer.serverMutex.Lock()
-	defer mockupServer.serverMutex.Unlock()
+	MockupServer.serverMutex.Lock()
+	defer MockupServer.serverMutex.Unlock()
 
-	mockupServer.enable = false
+	MockupServer.enabled = false
 }
 
-func FlushMocks() {
-	mockupServer.serverMutex.Lock()
-	defer mockupServer.serverMutex.Unlock()
+func DeleteMocks() {
+	MockupServer.serverMutex.Lock()
+	defer MockupServer.serverMutex.Unlock()
 
-	mockupServer.mocks = make(map[string]*Mock)
+	MockupServer.mocks = make(map[string]*Mock)
 }
 func AddMock(mock Mock) {
-	mockupServer.serverMutex.Lock()
-	defer mockupServer.serverMutex.Unlock()
+	MockupServer.serverMutex.Lock()
+	defer MockupServer.serverMutex.Unlock()
 
-	key := mockupServer.getMockKey(mock.Method, mock.Url, mock.RequestBody)
-	mockupServer.mocks[key] = &mock
+	key := MockupServer.getMockKey(mock.Method, mock.Url, mock.RequestBody)
+	MockupServer.mocks[key] = &mock
 }
 
 func (m *mockServer) getMockKey(method, url, body string) string {
@@ -65,11 +65,11 @@ func (m *mockServer) cleanBody(body string) string {
 	return body
 }
 
-func (m *mockServer) getMock(method, url, body string) *Mock {
-	if !m.enable {
+func GetMock(method, url, body string) *Mock {
+	if !MockupServer.enabled {
 		return nil
 	}
-	if mock := m.mocks[m.getMockKey(method, url, body)]; mock != nil {
+	if mock := MockupServer.mocks[MockupServer.getMockKey(method, url, body)]; mock != nil {
 		return mock
 	}
 	return &Mock{

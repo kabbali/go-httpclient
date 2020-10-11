@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"errors"
+	"github.com/kabbali/go-httpclient/core"
+	"github.com/kabbali/go-httpclient/gohttp_mock"
 	"github.com/kabbali/go-httpclient/gomime"
 	"io/ioutil"
 	"net"
@@ -19,7 +21,7 @@ const (
 	defaultConnectionTimeout  = 100 * time.Millisecond
 )
 
-func (c *httpClient) do(method string, url string, headers http.Header, body interface{}) (*Response, error) {
+func (c *httpClient) do(method string, url string, headers http.Header, body interface{}) (*core.Response, error) {
 
 	fullHeaders := c.getRequestHeaders(headers)
 
@@ -28,7 +30,7 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 		return nil, err
 	}
 
-	if mock := mockupServer.getMock(method, url, string(requestBody)); mock != nil {
+	if mock := gohttp_mock.GetMock(method, url, string(requestBody)); mock != nil {
 		return mock.GetResponse()
 	}
 
@@ -52,11 +54,11 @@ func (c *httpClient) do(method string, url string, headers http.Header, body int
 		return nil, err
 	}
 
-	finalResponse := Response{
-		status:     response.Status,
-		statusCode: response.StatusCode,
-		headers:    response.Header,
-		body:       responseBody,
+	finalResponse := core.Response{
+		Status:     response.Status,
+		StatusCode: response.StatusCode,
+		Headers:    response.Header,
+		Body:       responseBody,
 	}
 	return &finalResponse, nil
 }
