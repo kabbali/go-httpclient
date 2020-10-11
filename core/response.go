@@ -14,19 +14,6 @@ type (
 	}
 )
 
-//
-//func (r *Response) Status() string {
-//	return r.status
-//}
-//
-//func (r *Response) StatusCode() int {
-//	return r.statusCode
-//}
-//
-//func (r *Response) Headers() http.Header {
-//	return r.headers
-//}
-//
 func (r *Response) Bytes() []byte {
 	return r.Body
 }
