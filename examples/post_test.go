@@ -10,8 +10,8 @@ import (
 
 func TestCreateRepo(t *testing.T) {
 	t.Run("TimeoutErrorFromGithub", func(t *testing.T) {
-		gohttp_mock.DeleteMocks()
-		gohttp_mock.AddMock(gohttp_mock.Mock{
+		gohttp_mock.MockupServer.DeleteMocks()
+		gohttp_mock.MockupServer.AddMock(gohttp_mock.Mock{
 			Method:      http.MethodPost,
 			Url:         "https://api.github.com/user/repos",
 			RequestBody: `{"name":"test-repo","description":"repository for testing","private":true}`,
@@ -40,8 +40,8 @@ func TestCreateRepo(t *testing.T) {
 	})
 
 	t.Run("NoErrorProcessingGithubErrorResponse", func(t *testing.T) {
-		gohttp_mock.DeleteMocks()
-		gohttp_mock.AddMock(gohttp_mock.Mock{
+		gohttp_mock.MockupServer.DeleteMocks()
+		gohttp_mock.MockupServer.AddMock(gohttp_mock.Mock{
 			Method:             http.MethodPost,
 			Url:                "https://api.github.com/user/repos",
 			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
@@ -71,8 +71,8 @@ func TestCreateRepo(t *testing.T) {
 	})
 
 	t.Run("ErrorProcessingGithubErrorResponse", func(t *testing.T) {
-		gohttp_mock.DeleteMocks()
-		gohttp_mock.AddMock(gohttp_mock.Mock{
+		gohttp_mock.MockupServer.DeleteMocks()
+		gohttp_mock.MockupServer.AddMock(gohttp_mock.Mock{
 			Method:             http.MethodPost,
 			Url:                "https://api.github.com/user/repos",
 			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
@@ -102,8 +102,8 @@ func TestCreateRepo(t *testing.T) {
 	})
 
 	t.Run("NoErrorFromGithub", func(t *testing.T) {
-		gohttp_mock.DeleteMocks()
-		gohttp_mock.AddMock(gohttp_mock.Mock{
+		gohttp_mock.MockupServer.DeleteMocks()
+		gohttp_mock.MockupServer.AddMock(gohttp_mock.Mock{
 			Method:             http.MethodPost,
 			Url:                "https://api.github.com/user/repos",
 			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
@@ -133,8 +133,8 @@ func TestCreateRepo(t *testing.T) {
 	})
 
 	t.Run("ErrorUnmarshalResponseBody", func(t *testing.T) {
-		gohttp_mock.DeleteMocks()
-		gohttp_mock.AddMock(gohttp_mock.Mock{
+		gohttp_mock.MockupServer.DeleteMocks()
+		gohttp_mock.MockupServer.AddMock(gohttp_mock.Mock{
 			Method:             http.MethodPost,
 			Url:                "https://api.github.com/user/repos",
 			RequestBody:        `{"name":"test-repo","description":"repository for testing","private":true}`,
